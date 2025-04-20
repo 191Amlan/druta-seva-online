@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+Ambulance Booking and Tracking Web Application
+An all-in-one, responsive, real-time ambulance booking and tracking platform designed to connect users instantly with nearby ambulances during emergencies. Built with React.js, TypeScript, Node.js, MongoDB, CSS, and Mapbox for fast, secure, and reliable service.
 
-## Project info
+🔥 Features
+User Registration and Login (Email, Phone, Google)
 
-**URL**: https://lovable.dev/projects/6e50c3b8-c99b-4377-8e71-043f159e6d3b
+Real-Time Current Location Detection
 
-## How can I edit this code?
+Source and Destination Selection
 
-There are several ways of editing your application.
+Dynamic Map Showing Nearby Ambulances
 
-**Use Lovable**
+Ambulance Selection by Type (Basic, ICU, AC) and Cost
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6e50c3b8-c99b-4377-8e71-043f159e6d3b) and start prompting.
+Secure Payments (Cash, UPI, Card, Netbanking)
 
-Changes made via Lovable will be committed automatically to this repo.
+Booking Confirmation and Details
 
-**Use your preferred IDE**
+Live Ambulance Tracking
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+"My Rescue" Section to Manage Bookings
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Admin Dashboard for Ambulance Management
 
-Follow these steps:
+Fully Responsive (Mobile and Desktop Friendly)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Built using Clean CSS and TypeScript
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+🛠 Tech Stack
+Frontend: React.js, TypeScript, CSS
 
-# Step 3: Install the necessary dependencies.
-npm i
+Backend: Node.js, Express.js
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Database: MongoDB (Mongoose)
 
-**Edit a file directly in GitHub**
+Maps: Mapbox API
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Authentication: JWT, OAuth (Google Login)
 
-**Use GitHub Codespaces**
+Payment Integration: Razorpay / Stripe (future enhancement)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Features
+User Registration and Login (Email, Phone, Google)
 
-## What technologies are used for this project?
+Real-Time Current Location Detection
 
-This project is built with:
+Source and Destination Selection
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Ambulance Selection by Type (Basic, ICU, AC) and Cost
 
-## How can I deploy this project?
+Secure Payments (Cash, UPI, Card, Netbanking)
 
-Simply open [Lovable](https://lovable.dev/projects/6e50c3b8-c99b-4377-8e71-043f159e6d3b) and click on Share -> Publish.
+Booking Confirmation and Details
 
-## Can I connect a custom domain to my Lovable project?
+Live Ambulance Tracking
 
-Yes, you can!
+Fully Responsive (Mobile and Desktop Friendly)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Built using Clean CSS and TypeScript
