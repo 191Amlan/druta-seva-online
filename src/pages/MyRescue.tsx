@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { MapPin, Phone, Clock } from 'lucide-react';
+import { MapPin, Phone, Clock, Ambulance } from 'lucide-react';
+import LocationMap from '@/components/map/LocationMap';
+import { Progress } from '@/components/ui/progress';
 
 const MyRescuePage = () => {
   const { isAuthenticated } = useAuth();
+  const [progress, setProgress] = useState(0);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -22,10 +25,25 @@ const MyRescuePage = () => {
     driverName: 'Sunil Sharma',
     contactNumber: '+91 8765432109',
     pickupLocation: 'Current Location',
+    pickup: { lat: 12.9716, lng: 77.5946 }, // Bengaluru coordinates
     destination: 'City Hospital',
+    destinationCoords: { lat: 12.9352, lng: 77.6245 }, // Hospital coordinates
     estimatedArrival: '7 minutes',
     bookedAt: new Date().toLocaleString(),
   };
+
+  // Update progress bar
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(oldProgress => {
+        // Progress increases until 95%, then we'll wait for "arrived" status
+        const newProgress = Math.min(oldProgress + 1, 95);
+        return newProgress;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <MainLayout>
@@ -33,7 +51,7 @@ const MyRescuePage = () => {
         <h1 className="text-3xl font-bold mb-8">My Rescue</h1>
 
         {booking ? (
-          <Card className="max-w-3xl mx-auto">
+          <Card className="max-w-4xl mx-auto">
             <CardHeader className="bg-primary/10">
               <div className="flex items-center justify-between">
                 <CardTitle>Booking #{booking.id}</CardTitle>
@@ -43,6 +61,17 @@ const MyRescuePage = () => {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Ambulance className="h-4 w-4 text-primary" />
+                    <span className="font-medium">Ambulance En Route</span>
+                  </div>
+                  <span className="text-sm text-gray-500">ETA: {booking.estimatedArrival}</span>
+                </div>
+                <Progress value={progress} className="h-2" />
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="font-medium text-lg mb-4">Ambulance Details</h3>
@@ -90,9 +119,12 @@ const MyRescuePage = () => {
 
               <div className="mt-8 pt-6 border-t">
                 <h3 className="font-medium text-lg mb-4">Live Tracking</h3>
-                <div className="bg-gray-100 rounded-md h-64 flex items-center justify-center">
-                  <p className="text-gray-500">Map view will be available here</p>
-                </div>
+                <LocationMap 
+                  trackingMode={true}
+                  initialPosition={booking.pickup}
+                  destinationPosition={booking.destinationCoords}
+                  estimatedTime={booking.estimatedArrival}
+                />
               </div>
             </CardContent>
           </Card>
@@ -107,3 +139,4 @@ const MyRescuePage = () => {
 };
 
 export default MyRescuePage;
+
