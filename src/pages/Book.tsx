@@ -1,34 +1,29 @@
-
 import React, { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { 
-  Card, 
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle 
-} from '@/components/ui/card';
-import { 
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { MapPin, Clock, Calendar, CreditCard, Banknote } from 'lucide-react';
 import { toast } from 'sonner';
+import LocationMap from '@/components/map/LocationMap';
+
+interface Location {
+  lat: number;
+  lng: number;
+  address: string;
+}
 
 const BookPage = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [location, setLocation] = useState('');
-  const [destination, setDestination] = useState('');
+  const [pickupLocation, setPickupLocation] = useState<Location | null>(null);
+  const [destination, setDestination] = useState<Location | null>(null);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [isMapMode, setIsMapMode] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -68,9 +63,9 @@ const BookPage = () => {
     }
   ];
 
-  const handleLocationSubmit = (e) => {
+  const handleLocationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!location) {
+    if (!pickupLocation) {
       toast.error('Please enter your pickup location');
       return;
     }
@@ -100,6 +95,15 @@ const BookPage = () => {
     setTimeout(() => {
       navigate('/my-rescue');
     }, 2000);
+  };
+
+  const handleLocationSelect = (type: 'pickup' | 'destination') => (location: Location) => {
+    if (type === 'pickup') {
+      setPickupLocation(location);
+    } else {
+      setDestination(location);
+    }
+    setIsMapMode(false);
   };
 
   return (
@@ -133,35 +137,51 @@ const BookPage = () => {
             <CardContent>
               <form onSubmit={handleLocationSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="location" className="block text-sm font-medium mb-1">Pickup Location</label>
+                  <label htmlFor="pickup" className="block text-sm font-medium mb-1">Pickup Location</label>
                   <div className="flex gap-2">
-                    <input 
-                      id="location" 
-                      type="text" 
-                      className="w-full p-2 border border-gray-300 rounded-md" 
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
+                    <Input
+                      id="pickup"
+                      value={pickupLocation?.address || ''}
+                      onChange={(e) => setPickupLocation({ ...pickupLocation!, address: e.target.value })}
                       placeholder="Enter your current location"
                     />
-                    <Button type="button" variant="outline" size="icon" onClick={() => {
-                      setLocation('Current Location');
-                      toast.info('Using your current location');
-                    }}>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setIsMapMode(true)}
+                    >
                       <MapPin className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
+
+                {isMapMode && (
+                  <div className="mt-4">
+                    <LocationMap onLocationSelect={handleLocationSelect('pickup')} />
+                  </div>
+                )}
+
                 <div>
                   <label htmlFor="destination" className="block text-sm font-medium mb-1">Destination (Optional)</label>
-                  <input 
-                    id="destination" 
-                    type="text" 
-                    className="w-full p-2 border border-gray-300 rounded-md" 
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    placeholder="Enter your destination"
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="destination"
+                      value={destination?.address || ''}
+                      onChange={(e) => setDestination({ ...destination!, address: e.target.value })}
+                      placeholder="Enter your destination"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setIsMapMode(true)}
+                    >
+                      <MapPin className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
+
                 <Button type="submit" className="w-full">Continue</Button>
               </form>
             </CardContent>
@@ -173,7 +193,7 @@ const BookPage = () => {
           <Card className="max-w-3xl mx-auto">
             <CardHeader>
               <CardTitle>Select an Ambulance</CardTitle>
-              <CardDescription>Choose from available ambulances near {location}</CardDescription>
+              <CardDescription>Choose from available ambulances near {pickupLocation?.address}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
