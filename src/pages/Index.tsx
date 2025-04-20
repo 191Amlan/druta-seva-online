@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
@@ -10,13 +10,14 @@ import { useAuth } from '@/contexts/AuthContext';
 const Index = () => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleBookNow = () => {
     if (!isAuthenticated) {
       setAuthModalOpen(true);
     } else {
-      // Redirect to booking page
-      window.location.href = '/book';
+      // Navigate to booking page
+      navigate('/book');
     }
   };
 
